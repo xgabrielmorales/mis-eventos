@@ -23,6 +23,12 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 from sqlmodel import SQLModel
+from src.events.models.attendance import Attendance
+from src.events.models.event import Event
+from src.events.models.registration import Registration
+from src.events.models.resource import Resource
+from src.events.models.schedule import Schedule
+from src.users.models.user import User
 
 target_metadata = SQLModel.metadata
 
