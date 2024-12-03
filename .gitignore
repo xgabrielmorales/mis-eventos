@@ -10,3 +10,5 @@ wheels/
 .env
 .env.*
 .venv
+!.env.dev.enc
+.secret_key

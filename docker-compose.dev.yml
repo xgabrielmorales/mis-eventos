@@ -1,0 +1,32 @@
+name: mis-eventos
+
+services:
+  mis-eventos-app:
+    build:
+      context: .
+      dockerfile: ./compose/dev/Dockerfile
+    image: mis-eventos
+    container_name: mis-eventos
+    restart: always
+    depends_on:
+      - mis-eventos-db
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/app
+    tty: true
+    stdin_open: true
+    command: [ "/start" ]
+
+  mis-eventos-db:
+    image: postgres:16
+    container_name: mis-eventos-db
+    volumes:
+      - mis-eventos-db-data:/var/lib/postgresql/data
+    env_file:
+      - environment/.env.dev
+    ports:
+      - "5432:5432"
+
+volumes:
+  mis-eventos-db-data:
