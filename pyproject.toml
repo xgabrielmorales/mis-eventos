@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "mis-eventos"
+version = "0.1.0"
+description = "Service responsible for event management and process automation."
+authors = ["Gabriel Morales <gabrielmorales1@protonmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+alembic = "^1.14.0"
+fastapi = "^0.115.5"
+psycopg = "^3.2.3"
+psycopg-binary = "^3.2.3"
+pydantic = "^2.10.3"
+pydantic-settings = "^2.6.1"
+sqlmodel = "^0.0.22"
+uvicorn = "^0.32.1"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.13.0"
+pre-commit = "^4.0.1"
+pytest = "^8.3.4"
+pytest-cov = "^6.0.0"
+ruff = "^0.8.1"
+
+[tool.ruff]
+line-length = 100
+exclude = [".env", "venv", "migrations"]
+
+[tool.ruff.lint]
+extend-select = ["I"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["pydantic.mypy"]
+exclude = [".env", "venv", "migrations"]
+strict = true
