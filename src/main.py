@@ -5,6 +5,8 @@ from fastapi import FastAPI
 from strawberry.fastapi import GraphQLRouter
 
 from src.healthcheck.graphql.queries import HealthCheckQuery
+from src.users.graphql.mutations import UserMutation
+from src.users.graphql.queries import UserQuery
 
 config.fileConfig(
     fname="logging.ini",
@@ -21,11 +23,14 @@ app = FastAPI(
 @strawberry.type
 class Query(
     HealthCheckQuery,
+    UserQuery,
 ): ...
 
 
 @strawberry.type
-class Mutation: ...
+class Mutation(
+    UserMutation,
+): ...
 
 
 schema = strawberry.Schema(

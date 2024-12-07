@@ -11,6 +11,8 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         case_sensitive=True,
     )
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY: str = "3RWM3zT68QEaOacQiYmSVzNyOHnJMpqVQi8mS2zN"
 
     POSTGRES_HOST: str
     POSTGRES_USER: str
