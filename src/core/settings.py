@@ -12,12 +12,14 @@ class Settings(BaseSettings):
         case_sensitive=True,
     )
     # SECURITY WARNING: keep the secret key used in production secret!
+    # These are for testing purposes only.
+
     SECRET_KEY: str = "3RWM3zT68QEaOacQiYmSVzNyOHnJMpqVQi8mS2zN"
 
-    POSTGRES_HOST: str
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
+    POSTGRES_HOST: str = "mis-eventos-db"
+    POSTGRES_USER: str = "mis-eventos-db"
+    POSTGRES_PASSWORD: str = "c2614c1673ab56aaa9ab22c23e80f8dc"
+    POSTGRES_DB: str = "mis-eventos-db"
     POSTGRES_URL: Optional[Union[PostgresDsn, str]] = None
 
     @field_validator("POSTGRES_URL", mode="before")

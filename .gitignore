@@ -12,3 +12,7 @@ wheels/
 .venv
 !.env.dev.enc
 .secret_key
+
+# Test Coverage
+.coverage
+coverage.xml

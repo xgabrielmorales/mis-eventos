@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.12,<3.13"
 alembic = "^1.14.0"
 fastapi = "^0.115.5"
 psycopg = "^3.2.3"
@@ -26,6 +26,7 @@ pre-commit = "^4.0.1"
 pytest = "^8.3.4"
 pytest-cov = "^6.0.0"
 ruff = "^0.8.1"
+coveralls = "^4.0.1"
 
 [tool.ruff]
 line-length = 100
