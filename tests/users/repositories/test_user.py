@@ -1,3 +1,5 @@
+import pytest
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlmodel import Session
 
 from src.users.repository.user import UserRepository
@@ -23,6 +25,13 @@ class TestUserRepository:
         assert user.last_name == new_user.last_name
         assert user.username == new_user.username
         assert user.role == new_user.role
+
+    def test_get_by_id_not_found(
+        self,
+        user_repository: UserRepository,
+    ) -> None:
+        user = user_repository.get_by_id(user_id=9999)
+        assert user is None
 
     def test_get_all(
         self,
@@ -62,22 +71,32 @@ class TestUserRepository:
         assert created_user.username == new_user.username
         assert created_user.role == new_user.role
 
+    def test_create_duplicate_username(
+        self,
+        session: Session,
+        user_repository: UserRepository,
+    ) -> None:
+        user_1 = UserFactory()
+        user_repository.create(user_1)
+
+        user_2 = UserFactory(username=user_1.username)
+        with pytest.raises(IntegrityError):
+            user_repository.create(user_2)
+
     def test_update(
         self,
         session: Session,
         user_repository: UserRepository,
     ) -> None:
         user = UserFactory()
-        session.add(user)
-        session.commit()
-        session.refresh(user)
+        user_repository.create(user)
 
         user = user_repository.get_by_id(user_id=user.id)
-        user.first_name = "Updated"
+        user.first_name = "UpdatedName"
 
         updated_user = user_repository.update(user)
 
-        assert updated_user.first_name == "Updated"
+        assert updated_user.first_name == "UpdatedName"
 
     def test_delete(
         self,
@@ -85,9 +104,7 @@ class TestUserRepository:
         user_repository: UserRepository,
     ) -> None:
         user = UserFactory()
-        session.add(user)
-        session.commit()
-        session.refresh(user)
+        user_repository.create(user)
 
         user = user_repository.get_by_id(user_id=user.id)
 
@@ -96,3 +113,27 @@ class TestUserRepository:
         deleted_user = user_repository.get_by_id(user_id=user.id)
 
         assert deleted_user is None
+
+    def test_delete_nonexistent_user(
+        self,
+        user_repository: UserRepository,
+    ) -> None:
+        nonexistent_user = UserFactory(id=9999)
+        with pytest.raises(SQLAlchemyError):
+            user_repository.delete(nonexistent_user)
+
+    def test_create_missing_fields(
+        self,
+        session: Session,
+        user_repository: UserRepository,
+    ) -> None:
+        incomplete_user = UserFactory(first_name=None)
+        with pytest.raises(IntegrityError):
+            user_repository.create(incomplete_user)
+
+    def test_get_all_empty(
+        self,
+        user_repository: UserRepository,
+    ) -> None:
+        fetched_users = user_repository.get_all()
+        assert fetched_users == []
