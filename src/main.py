@@ -4,6 +4,7 @@ import strawberry
 from fastapi import FastAPI
 from strawberry.fastapi import GraphQLRouter
 
+from src.auth.graphql.mutations import AuthMutation
 from src.healthcheck.graphql.queries import HealthCheckQuery
 from src.users.graphql.mutations import UserMutation
 from src.users.graphql.queries import UserQuery
@@ -29,6 +30,7 @@ class Query(
 
 @strawberry.type
 class Mutation(
+    AuthMutation,
     UserMutation,
 ): ...
 

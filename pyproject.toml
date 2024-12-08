@@ -19,6 +19,7 @@ uvicorn = "^0.32.1"
 strawberry-graphql = {extras = ["fastapi"], version = "^0.253.1"}
 passlib = "^1.7.4"
 types-passlib = "^1.7.7.20240819"
+pyjwt = "^2.10.1"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.13.0"
@@ -42,6 +43,6 @@ combine-as-imports = true
 
 [tool.mypy]
 python_version = "3.12"
-plugins = ["pydantic.mypy", "strawberry.ext.mypy_plugin"]
+plugins = ["pydantic.mypy"]
 exclude = [".env", "venv", "migrations", "tests"]
 strict = true
