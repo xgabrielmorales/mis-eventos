@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Optional
 
 from sqlmodel import Session, select
@@ -6,28 +7,28 @@ from src.core.database import engine
 from src.users.models.user import User
 
 
+@dataclass
 class UserRepository:
-    @staticmethod
-    def get_by_id(user_id: int) -> Optional[User]:
+    session: Session = Session(engine)
+
+    def get_by_id(self, user_id: int) -> Optional[User]:
         query = select(User).where(User.id == user_id)
 
-        with Session(engine) as db:
+        with self.session as db:
             user = db.exec(query).first()
 
         return user
 
-    @staticmethod
-    def get_all() -> list[User]:
+    def get_all(self) -> list[User]:
         query = select(User)
 
-        with Session(engine) as db:
+        with self.session as db:
             users = db.exec(query).all()
 
         return list(users)
 
-    @staticmethod
-    def create(new_user: User) -> User:
-        with Session(engine) as db:
+    def create(self, new_user: User) -> User:
+        with self.session as db:
             try:
                 db.add(new_user)
                 db.commit()
@@ -38,9 +39,8 @@ class UserRepository:
 
         return new_user
 
-    @staticmethod
-    def update(user: User) -> User:
-        with Session(engine) as db:
+    def update(self, user: User) -> User:
+        with self.session as db:
             try:
                 db.add(user)
                 db.commit()
@@ -51,9 +51,8 @@ class UserRepository:
 
         return user
 
-    @staticmethod
-    def delete(user: User) -> None:
-        with Session(engine) as db:
+    def delete(self, user: User) -> None:
+        with self.session as db:
             try:
                 db.delete(user)
                 db.commit()

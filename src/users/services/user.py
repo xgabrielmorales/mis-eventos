@@ -1,3 +1,5 @@
+import dataclasses
+
 from fastapi.exceptions import HTTPException
 
 from src.core.password import hash_password
@@ -6,10 +8,12 @@ from src.users.models.user import User
 from src.users.repository.user import UserRepository
 
 
+@dataclasses.dataclass
 class UserService:
-    @staticmethod
-    def get_by_id(user_id: int) -> UserType:
-        user = UserRepository.get_by_id(user_id=user_id)
+    user_repository: UserRepository = dataclasses.field(default_factory=UserRepository)
+
+    def get_by_id(self, user_id: int) -> UserType:
+        user = self.user_repository.get_by_id(user_id=user_id)
 
         if not user:
             raise HTTPException(
@@ -25,10 +29,9 @@ class UserService:
             role=user.role,
         )
 
-    @staticmethod
-    def get_all() -> list[UserType]:
+    def get_all(self) -> list[UserType]:
         users: list[UserType] = []
-        for user in UserRepository.get_all():
+        for user in self.user_repository.get_all():
             users.append(
                 UserType(
                     id=user.id,
@@ -41,8 +44,7 @@ class UserService:
 
         return users
 
-    @staticmethod
-    def create(user_data: UserInput) -> UserType:
+    def create(self, user_data: UserInput) -> UserType:
         new_user = User(
             first_name=user_data.first_name,
             last_name=user_data.last_name,
@@ -51,7 +53,7 @@ class UserService:
             role=user_data.role,
         )
 
-        user = UserRepository.create(new_user=new_user)
+        user = self.user_repository.create(new_user=new_user)
 
         return UserType(
             id=user.id,
@@ -61,9 +63,8 @@ class UserService:
             role=user.role,
         )
 
-    @staticmethod
-    def update(user_id: int, user_data: UserInputUpdate) -> UserType:
-        user = UserRepository.get_by_id(user_id=user_id)
+    def update(self, user_id: int, user_data: UserInputUpdate) -> UserType:
+        user = self.user_repository.get_by_id(user_id=user_id)
 
         if not user:
             raise HTTPException(
@@ -78,7 +79,7 @@ class UserService:
         if user_data.password:
             user.password = hash_password(user_data.password)
 
-        UserRepository.update(user=user)
+        self.user_repository.update(user=user)
 
         return UserType(
             id=user.id,
@@ -88,16 +89,15 @@ class UserService:
             role=user.role,
         )
 
-    @staticmethod
-    def delete(user_id: int) -> str:
-        user = UserRepository.get_by_id(user_id=user_id)
+    def delete(self, user_id: int) -> str:
+        user = self.user_repository.get_by_id(user_id=user_id)
 
         if not user:
             raise HTTPException(
                 status_code=404,
-                detail="User does not exists or cannot be found.",
+                detail="User does not exist or cannot be found.",
             )
 
-        UserRepository.delete(user=user)
+        self.user_repository.delete(user=user)
 
         return "User deleted successfully"

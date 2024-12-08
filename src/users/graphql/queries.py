@@ -8,8 +8,12 @@ from src.users.services.user import UserService
 class UserQuery:
     @strawberry.field
     def get_user_by_id(self, user_id: int) -> UserType:
-        return UserService.get_by_id(user_id=user_id)
+        user_service = UserService()
+
+        return user_service.get_by_id(user_id=user_id)
 
     @strawberry.field
     def get_all_users(self) -> list[UserType]:
-        return UserService.get_all()
+        user_service = UserService()
+
+        return user_service.get_all()
