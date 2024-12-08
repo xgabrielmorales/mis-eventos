@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from pydantic import field_validator
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 from src.users.schemas import Role
+
+if TYPE_CHECKING:
+    from src.events.models.event import Event
 
 
 class User(SQLModel, table=True):
@@ -11,6 +16,7 @@ class User(SQLModel, table=True):
     username: str = Field(max_length=128, unique=True)
     password: str = Field(max_length=128)
     role: Role
+    events: list["Event"] = Relationship(back_populates="organizer")
 
     @field_validator("first_name", "last_name")
     def name_not_empty(cls, value: str) -> str:
