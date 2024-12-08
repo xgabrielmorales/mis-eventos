@@ -65,6 +65,9 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-root --no-interaction --no-ansi --with=dev
 
+      - name: Run database migrations
+        run: poetry run alembic upgrade head
+
       - name: Run tests
         run: poetry run pytest --cov=src --cov-report=term-missing --cov-report=xml
 
