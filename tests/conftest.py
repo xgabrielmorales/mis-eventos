@@ -1,12 +1,14 @@
 from collections.abc import Generator
 
 import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 from sqlmodel import Session, create_engine
 
 from src.auth.services.jwt_manager import JwtManager
 from src.core.settings import settings
+from src.main import app
 from src.users.repository.user import UserRepository
 from src.users.services.user import UserService
 
@@ -36,6 +38,12 @@ def db_session() -> Generator[Session, None, None]:
         session.close()
         transaction.rollback()
         connection.close()
+
+
+@pytest.fixture(scope="function", name="client")
+def http_client(session: Session) -> Generator[TestClient, None, None]:
+    with TestClient(app) as c:
+        yield c
 
 
 @pytest.fixture(scope="function", name="authorize")
