@@ -17,7 +17,7 @@ class TestUserRepository:
         session.commit()
         session.refresh(new_user)
 
-        user = user_repository.get_by_id(new_user.id)
+        user = user_repository.get_by_id(instance_id=new_user.id)
 
         assert user is not None
         assert user.id == new_user.id
@@ -30,7 +30,7 @@ class TestUserRepository:
         self,
         user_repository: UserRepository,
     ) -> None:
-        user = user_repository.get_by_id(user_id=9999)
+        user = user_repository.get_by_id(instance_id=9999)
         assert user is None
 
     def test_get_all(
@@ -91,7 +91,7 @@ class TestUserRepository:
         user = UserFactory()
         user_repository.create(user)
 
-        user = user_repository.get_by_id(user_id=user.id)
+        user = user_repository.get_by_id(instance_id=user.id)
         user.first_name = "UpdatedName"
 
         updated_user = user_repository.update(user)
@@ -106,11 +106,11 @@ class TestUserRepository:
         user = UserFactory()
         user_repository.create(user)
 
-        user = user_repository.get_by_id(user_id=user.id)
+        user = user_repository.get_by_id(instance_id=user.id)
 
         user_repository.delete(user)
 
-        deleted_user = user_repository.get_by_id(user_id=user.id)
+        deleted_user = user_repository.get_by_id(instance_id=user.id)
 
         assert deleted_user is None
 

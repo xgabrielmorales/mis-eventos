@@ -15,7 +15,7 @@ class RegistrationService:
     repository: RegistrationRepository = field(default_factory=RegistrationRepository)
 
     def get_by_id(self, registration_id: int) -> RegistrationType:
-        registration = self.repository.get_by_id(registration_id=registration_id)
+        registration = self.repository.get_by_id(instance_id=registration_id)
 
         if not registration:
             raise HTTPException(
@@ -39,7 +39,7 @@ class RegistrationService:
             attendee_id=registration_data.attendee_id,
         )
 
-        registration = self.repository.create(new_registration)
+        registration = self.repository.create(instance=new_registration)
 
         return RegistrationType(
             id=registration.id,
@@ -52,7 +52,7 @@ class RegistrationService:
         registration_id: int,
         registration_data: RegistrationInputUpdate,
     ) -> RegistrationType:
-        registration = self.repository.get_by_id(registration_id)
+        registration = self.repository.get_by_id(instance_id=registration_id)
 
         if not registration:
             logger.warning(f"Registration with ID {registration_id} not found.")
@@ -74,7 +74,7 @@ class RegistrationService:
         self,
         registration_id: int,
     ) -> str:
-        registration = self.repository.get_by_id(registration_id=registration_id)
+        registration = self.repository.get_by_id(instance_id=registration_id)
 
         if not registration:
             logger.warning(f"Registration with ID {registration_id} not found for deletion.")
@@ -83,6 +83,6 @@ class RegistrationService:
                 detail="Event does not exist or cannot be found.",
             )
 
-        self.repository.delete(registration)
+        self.repository.delete(instance=registration)
 
         return "Event deleted successfully"

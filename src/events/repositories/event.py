@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import joinedload
 from sqlmodel import Session, select
 
+from src.base.repository import BaseRepository
 from src.core.database import engine
 from src.events.models.event import Event
 
@@ -13,23 +14,32 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class EventRepository:
+class EventRepository(BaseRepository[Event]):
     session: Session = Session(engine)
+    model_class: type[Event] = Event
 
-    def get_by_id(self, event_id: int) -> Optional[Event]:
-        query = select(Event).where(Event.id == event_id).options(joinedload(Event.organizer))  # type: ignore[arg-type]
+    def get_by_id(self, instance_id: int) -> Optional[Event]:
+        query = (
+            select(self.model_class)
+            .where(
+                self.model_class.id == instance_id,
+            )
+            .options(joinedload(self.model_class.organizer))  # type: ignore[arg-type]
+        )
 
         with self.session as db:
             try:
                 event = db.exec(query).first()
-                logger.info(f"Retrieved event with ID {event_id}.")
+                logger.info(f"Retrieved event with ID {instance_id}.")
                 return event
             except SQLAlchemyError as e:
-                logger.error(f"Error retrieving event with ID {event_id}: {e}")
+                logger.error(f"Error retrieving event with ID {instance_id}: {e}")
                 raise
 
     def get_all(self) -> list[Event]:
-        query = select(Event).options(joinedload(Event.organizer))  # type: ignore[arg-type]
+        query = select(
+            self.model_class,
+        ).options(joinedload(self.model_class.organizer))  # type: ignore[arg-type]
 
         with self.session as db:
             try:
@@ -38,41 +48,4 @@ class EventRepository:
                 return list(events)
             except SQLAlchemyError as e:
                 logger.error(f"Error retrieving all events: {e}")
-                raise
-
-    def create(self, new_event: Event) -> Event:
-        with self.session as db:
-            try:
-                db.add(new_event)
-                db.commit()
-                db.refresh(new_event)
-                logger.info(f"Created new event with ID {new_event.id}.")
-                return new_event
-            except SQLAlchemyError as e:
-                db.rollback()
-                logger.error(f"Error creating event: {e}")
-                raise
-
-    def update(self, event: Event) -> Event:
-        with self.session as db:
-            try:
-                db.add(event)
-                db.commit()
-                db.refresh(event)
-                logger.info(f"Updated event with ID {event.id}.")
-                return event
-            except SQLAlchemyError as e:
-                db.rollback()
-                logger.error(f"Error updating event with ID {event.id}: {e}")
-                raise
-
-    def delete(self, event: Event) -> None:
-        with self.session as db:
-            try:
-                db.delete(event)
-                db.commit()
-                logger.info(f"Deleted event with ID {event.id}.")
-            except SQLAlchemyError as e:
-                db.rollback()
-                logger.error(f"Error deleting event with ID {event.id}: {e}")
                 raise

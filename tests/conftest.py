@@ -58,4 +58,4 @@ def user_repository(session: Session) -> UserRepository:
 
 @pytest.fixture(scope="function")
 def user_service(user_repository: Session) -> UserRepository:
-    return UserService(user_repository=user_repository)
+    return UserService(repository=user_repository)

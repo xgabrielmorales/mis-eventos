@@ -13,11 +13,11 @@ logger = logging.getLogger(__name__)
 
 @dataclasses.dataclass
 class EventService:
-    event_repository: EventRepository = dataclasses.field(default_factory=EventRepository)
+    repository: EventRepository = dataclasses.field(default_factory=EventRepository)
 
     def get_by_id(self, event_id: int) -> EventType:
         logger.info(f"Fetching event with ID: {event_id}")
-        event = self.event_repository.get_by_id(event_id=event_id)
+        event = self.repository.get_by_id(instance_id=event_id)
 
         if not event:
             logger.warning(f"Event with ID {event_id} not found.")
@@ -48,7 +48,7 @@ class EventService:
     def get_all(self) -> list[EventType]:
         logger.info("Fetching all events.")
         events: list[EventType] = []
-        for event in self.event_repository.get_all():
+        for event in self.repository.get_all():
             events.append(
                 EventType(
                     id=event.id,
@@ -84,10 +84,10 @@ class EventService:
             organizer_id=event_data.organizer_id,
         )
 
-        event_created = self.event_repository.create(new_event=new_event)
+        event_created = self.repository.create(instance=new_event)
         logger.info(f"Event created with ID: {event_created.id}")
 
-        event: Event = self.event_repository.get_by_id(event_id=event_created.id)  # type: ignore[assignment]
+        event: Event = self.repository.get_by_id(instance_id=event_created.id)  # type: ignore[assignment]
 
         return EventType(
             id=event.id,
@@ -109,7 +109,7 @@ class EventService:
 
     def update(self, event_id: int, event_data: EventInputUpdate) -> EventType:
         logger.info(f"Updating event with ID: {event_id}")
-        event = self.event_repository.get_by_id(event_id=event_id)
+        event = self.repository.get_by_id(instance_id=event_id)
 
         if not event:
             logger.warning(f"Event with ID {event_id} not found for update.")
@@ -133,7 +133,7 @@ class EventService:
                 setattr(event, field, getattr(event_data, field))
                 logger.debug(f"Updated {field} for event ID {event_id}")
 
-        self.event_repository.update(event=event)
+        self.repository.update(instance=event)
         logger.info(f"Event with ID {event_id} updated successfully.")
 
         return EventType(
@@ -156,7 +156,7 @@ class EventService:
 
     def delete(self, event_id: int) -> str:
         logger.info(f"Deleting event with ID: {event_id}")
-        event = self.event_repository.get_by_id(event_id=event_id)
+        event = self.repository.get_by_id(instance_id=event_id)
 
         if not event:
             logger.warning(f"Event with ID {event_id} not found for deletion.")
@@ -165,6 +165,6 @@ class EventService:
                 detail="Event does not exist or cannot be found.",
             )
 
-        self.event_repository.delete(event=event)
+        self.repository.delete(instance=event)
         logger.info(f"Event with ID {event_id} deleted successfully.")
         return "Event deleted successfully"

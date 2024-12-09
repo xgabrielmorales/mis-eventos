@@ -13,11 +13,11 @@ logger = logging.getLogger(__name__)
 
 @dataclasses.dataclass
 class UserService:
-    user_repository: UserRepository = dataclasses.field(default_factory=UserRepository)
+    repository: UserRepository = dataclasses.field(default_factory=UserRepository)
 
     def get_by_id(self, user_id: int) -> UserType:
         logger.info(f"Fetching user with ID: {user_id}")
-        user = self.user_repository.get_by_id(user_id=user_id)
+        user = self.repository.get_by_id(instance_id=user_id)
 
         if not user:
             logger.warning(f"User with ID {user_id} not found.")
@@ -38,7 +38,7 @@ class UserService:
     def get_all(self) -> list[UserType]:
         logger.info("Fetching all users.")
         users: list[UserType] = []
-        for user in self.user_repository.get_all():
+        for user in self.repository.get_all():
             users.append(
                 UserType(
                     id=user.id,
@@ -61,7 +61,7 @@ class UserService:
             role=user_data.role,
         )
 
-        user = self.user_repository.create(new_user=new_user)
+        user = self.repository.create(instance=new_user)
         logger.info(f"User created with ID: {user.id}")
         return UserType(
             id=user.id,
@@ -73,7 +73,7 @@ class UserService:
 
     def update(self, user_id: int, user_data: UserInputUpdate) -> UserType:
         logger.info(f"Updating user with ID: {user_id}")
-        user = self.user_repository.get_by_id(user_id=user_id)
+        user = self.repository.get_by_id(instance_id=user_id)
 
         if not user:
             logger.warning(f"User with ID {user_id} not found for update.")
@@ -91,7 +91,7 @@ class UserService:
             user.password = hash_password(user_data.password)
             logger.debug(f"Password updated for user ID {user_id}")
 
-        self.user_repository.update(user=user)
+        self.repository.update(instance=user)
         logger.info(f"User with ID {user_id} updated successfully.")
 
         return UserType(
@@ -104,7 +104,7 @@ class UserService:
 
     def delete(self, user_id: int) -> str:
         logger.info(f"Deleting user with ID: {user_id}")
-        user = self.user_repository.get_by_id(user_id=user_id)
+        user = self.repository.get_by_id(instance_id=user_id)
 
         if not user:
             logger.warning(f"User with ID {user_id} not found for deletion.")
@@ -113,6 +113,6 @@ class UserService:
                 detail="User does not exist or cannot be found.",
             )
 
-        self.user_repository.delete(user=user)
+        self.repository.delete(instance=user)
         logger.info(f"User with ID {user_id} deleted successfully.")
         return "User deleted successfully"

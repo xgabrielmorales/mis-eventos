@@ -19,7 +19,7 @@ class TestUserService:
         session.commit()
         session.refresh(new_user)
 
-        user_service = UserService(user_repository=user_repository)
+        user_service = UserService(repository=user_repository)
         user = user_service.get_by_id(user_id=new_user.id)
 
         assert user is not None
@@ -36,7 +36,7 @@ class TestUserService:
         user_service = UserService()
 
         try:
-            user_service.get_by_id(999)
+            user_service.get_by_id(user_id=999)
         except HTTPException as e:
             assert e.status_code == 404
             assert e.detail == "User does not exist or cannot be found."
@@ -53,7 +53,7 @@ class TestUserService:
         session.add(user_2)
         session.commit()
 
-        user_service = UserService(user_repository=user_repository)
+        user_service = UserService(repository=user_repository)
         fetched_users = user_service.get_all()
 
         assert len(fetched_users) == 2
@@ -80,7 +80,7 @@ class TestUserService:
             role=new_user.role,
         )
 
-        user_service = UserService(user_repository=user_repository)
+        user_service = UserService(repository=user_repository)
         created_user = user_service.create(user_data=user_data)
 
         assert created_user.id is not None
@@ -107,7 +107,7 @@ class TestUserService:
             role=None,
         )
 
-        user_service = UserService(user_repository=user_repository)
+        user_service = UserService(repository=user_repository)
         updated_user = user_service.update(user_id=user.id, user_data=user_data)
 
         assert updated_user.first_name == "Updated"
@@ -124,7 +124,7 @@ class TestUserService:
             role=None,
         )
 
-        user_service = UserService(user_repository=user_repository)
+        user_service = UserService(repository=user_repository)
         with pytest.raises(HTTPException) as exc_info:
             user_service.update(user_id=999, user_data=user_data)
 
@@ -141,12 +141,12 @@ class TestUserService:
         session.commit()
         session.refresh(user)
 
-        user_service = UserService(user_repository=user_repository)
+        user_service = UserService(repository=user_repository)
         response = user_service.delete(user_id=user.id)
 
         assert response == "User deleted successfully"
 
-        deleted_user = user_repository.get_by_id(user_id=user.id)
+        deleted_user = user_repository.get_by_id(instance_id=user.id)
 
         assert deleted_user is None
 
@@ -154,7 +154,7 @@ class TestUserService:
         self,
         user_repository: UserRepository,
     ) -> None:
-        user_service = UserService(user_repository=user_repository)
+        user_service = UserService(repository=user_repository)
 
         with pytest.raises(HTTPException) as exc_info:
             user_service.delete(user_id=999)
