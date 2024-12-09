@@ -29,8 +29,8 @@ config.fileConfig(
 )
 
 app = FastAPI(
-    title="Mis Eventos",
-    description="Service responsible for event management and process automation.",
+    title="Mis_Eventos",
+    description="Service responsible for event management and process automation",
     version="0.1.0",
 )
 
