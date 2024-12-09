@@ -1,3 +1,4 @@
+from .attendance import AttendanceQuery
 from .event import EventQuery
 from .registration import ResgistrationQuery
 from .resource import ResourceQuery
@@ -8,4 +9,5 @@ __all__ = (
     "ResgistrationQuery",
     "ResourceQuery",
     "ScheduleQuery",
+    "AttendanceQuery",
 )
