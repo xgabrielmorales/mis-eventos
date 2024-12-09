@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Optional
 from pydantic import PositiveInt, field_validator
 from sqlmodel import Field, Relationship, SQLModel
 
-from src.events.schemas import ResourceType
+from src.events.schemas import ResourceTypeEnum
 
 if TYPE_CHECKING:
     from src.events.models.event import Event
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class Resource(SQLModel, table=True):
     id: int = Field(primary_key=True)
     name: str = Field(max_length=128)
-    type: ResourceType
+    type: ResourceTypeEnum
     quantity_available: PositiveInt
 
     event_id: int = Field(foreign_key="event.id")
@@ -26,8 +26,8 @@ class Resource(SQLModel, table=True):
         return v
 
     @field_validator("type")
-    def valid_resource_type(cls, v: ResourceType) -> ResourceType:
-        if v not in ResourceType:
+    def valid_resource_type(cls, v: ResourceTypeEnum) -> ResourceTypeEnum:
+        if v not in ResourceTypeEnum:
             raise ValueError("Invalid resource type")
 
         return v

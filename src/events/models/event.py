@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from pydantic import PositiveInt, ValidationInfo, field_validator
 from sqlmodel import Field, Relationship, SQLModel
 
-from src.events.schemas import EventStatus
+from src.events.schemas import EventStatusEnum
 
 if TYPE_CHECKING:
     from src.events.models.resource import Resource
@@ -20,7 +20,7 @@ class Event(SQLModel, table=True):
     end_date: datetime
     location: str = Field(max_length=256)
     capacity: PositiveInt
-    status: EventStatus
+    status: EventStatusEnum
 
     organizer_id: int = Field(foreign_key="user.id")
     organizer: "User" = Relationship(back_populates="events")

@@ -4,7 +4,7 @@ from typing import Optional
 import strawberry
 from pydantic import PositiveInt
 
-from src.events.schemas import EventStatus
+from src.events.schemas import EventStatusEnum
 from src.users.graphql.nodes import UserType
 
 
@@ -17,7 +17,7 @@ class EventType:
     end_date: datetime
     location: str
     capacity: PositiveInt
-    status: EventStatus
+    status: EventStatusEnum
     organizer: UserType
 
 
@@ -29,7 +29,7 @@ class EventInput:
     end_date: datetime
     location: str
     capacity: PositiveInt
-    status: EventStatus
+    status: EventStatusEnum
     organizer_id: int
 
 
@@ -41,5 +41,5 @@ class EventInputUpdate:
     end_date: Optional[datetime] = None
     location: Optional[str] = None
     capacity: Optional[PositiveInt] = None
-    status: Optional[EventStatus] = None
+    status: Optional[EventStatusEnum] = None
     organizer_id: Optional[int] = None

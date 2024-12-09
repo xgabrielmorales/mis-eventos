@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class RegistrationStatus(Enum):
+class RegistrationStatusEnum(Enum):
     CONFIRMED = "confirmed"
     PENDING = "pending"
     CANCELLED = "cancelled"
