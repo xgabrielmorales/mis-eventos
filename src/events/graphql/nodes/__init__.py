@@ -1,6 +1,7 @@
 from .event import EventInput, EventInputUpdate, EventType
 from .registration import RegistrationInput, RegistrationInputUpdate, RegistrationType
 from .resources import ResourceInput, ResourceInputUpdate, ResourceType
+from .schedule import ScheduleInput, ScheduleInputUpdate, ScheduleType
 
 __all__ = (
     "EventInput",
@@ -12,4 +13,7 @@ __all__ = (
     "ResourceInput",
     "ResourceInputUpdate",
     "ResourceType",
+    "ScheduleInput",
+    "ScheduleInputUpdate",
+    "ScheduleType",
 )

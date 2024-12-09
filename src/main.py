@@ -5,8 +5,13 @@ from fastapi import FastAPI
 from strawberry.fastapi import GraphQLRouter
 
 from src.auth.graphql.mutations import AuthMutation
-from src.events.graphql.mutations import EventMutation, RegistrationMutation, ResourceMutation
-from src.events.graphql.queries import EventQuery, ResgistrationQuery, ResourceQuery
+from src.events.graphql.mutations import (
+    EventMutation,
+    RegistrationMutation,
+    ResourceMutation,
+    ScheduleMutation,
+)
+from src.events.graphql.queries import EventQuery, ResgistrationQuery, ResourceQuery, ScheduleQuery
 from src.healthcheck.graphql.queries import HealthCheckQuery
 from src.users.graphql.mutations import UserMutation
 from src.users.graphql.queries import UserQuery
@@ -29,6 +34,7 @@ class Query(
     HealthCheckQuery,
     ResgistrationQuery,
     ResourceQuery,
+    ScheduleQuery,
     UserQuery,
 ): ...
 
@@ -39,6 +45,7 @@ class Mutation(
     EventMutation,
     RegistrationMutation,
     ResourceMutation,
+    ScheduleMutation,
     UserMutation,
 ): ...
 
