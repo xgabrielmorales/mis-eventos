@@ -14,7 +14,7 @@
     ```sh
     $ openssl enc -d -aes-256-cbc -pbkdf2 -in environment/.env.dev.enc -out environment/.env.dev -pass file:environment/.secret_key
     ```
-    Necesitarás la llave de cifrado en la ruta `environment/.secret_key`.
+    Para facilitar la revisión se dejará la llave en la carpeta environment.
 3. Construye la imagen de Docker:
     ```sh
     $ docker compose -f docker-compose.dev.yml build
@@ -25,17 +25,19 @@
     ```
 
 ## Guía de Desarrollo
-
+### Linters
 En el directorio `scripts` hay una colección de scripts que te pueden ser de utilidad:
+```sh
+$ ./scripts/lint.sh
+```
+### Tests
+La base de datos del entorno de desarrollo está compartida con la base de datos de pruebas, así que asegúrate de que esté limpia antes de ejecutar los tests.
 
-1. Linters:
-    ```sh
-    $ ./scripts/lint.sh
-    ```
-2. Tests:
-    ```sh
-    $ ./scripts/tests.sh
-    ```
+```sh
+$ docker compose -f docker-compose.dev.yml exec mis-eventos-app pytest --cov=src
+```
+
+Puedes ver la cobertura de los tests ejecutándolos o revisando el badge de Coveralls que está al inicio de este README en el repositorio.
 
 ## Documentación del API
 
@@ -78,7 +80,7 @@ Puedes acceder a la documentación del API a través de la colección de Postman
 - [x] Poetry
 - [x] FastAPI
 - [x] GraphQL (Strawberry)
-- [x] SqlModel
+- [x] SQLModel
 - [x] Postgres
 - [ ] Elastic
 - [ ] Redis (Opcional)
