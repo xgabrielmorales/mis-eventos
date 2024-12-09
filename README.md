@@ -44,7 +44,7 @@ Puedes acceder a la documentación del API a través de la colección de Postman
 ## Aproximación
 ### Diagrama Entidad Relación
 <div style="text-align: center;">
-    <img src="./extra/mis-eventos-UML.svg" alt="Diagrama Entidad Relación" title="Diagrama Entidad Relación" style="width: 50%;">
+    <img src="./extra/mis-eventos-UML.svg" alt="Diagrama Entidad Relación" title="Diagrama Entidad Relación">
 </div>
 
 1. **User - Event**
