@@ -41,7 +41,7 @@ Puedes ver la cobertura de los tests ejecutándolos o revisando el badge de Cove
 
 ## Documentación del API
 
-Puedes acceder a la documentación del API a través de la colección de Postman incluida en el repositorio o a través de la URL: `http://localhost:8000/graphql`.
+Puedes acceder a la documentación del API a través de la URL: `http://localhost:8000/graphql`. Debido a que [Postman no permite exportar una colección de GraphQL](https://github.com/postmanlabs/postman-app-support/issues/12362), tan pronto como pueda, incluiré una alternativa.
 
 ## Aproximación
 ### Diagrama Entidad Relación
@@ -87,3 +87,11 @@ Puedes acceder a la documentación del API a través de la colección de Postman
 - [x] Tests Unitarios (con reporte de cobertura)
 - [x] Documentación de API
 - [x] Migraciones (Alembic)
+
+### Limitaciones y Mejoras Futuras
+- Filtros
+- Validación de los datos
+- Manejo efectivo de las excepciones
+- Manejo de la autorización en la API de acuerdo con el rol del usuario
+- Tests
+- Inclusión de Elasticsearch
